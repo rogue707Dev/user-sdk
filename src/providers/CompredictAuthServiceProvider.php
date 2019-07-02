@@ -2,10 +2,12 @@
 
 namespace Compredict\User\Providers;
 
+use App\Authentication\CompredictUserProvider;
+use App\Auth\Models\User;
+use App\Auth\Providers\UserProvider;
 use Auth;
 use Compredict\API\Users\Client as Client;
 use Illuminate\Support\ServiceProvider;
-use App\Authentication\CompredictUserProvider;
 
 class CompredictAuthServiceProvider extends ServiceProvider
 {
@@ -32,6 +34,20 @@ class CompredictAuthServiceProvider extends ServiceProvider
         });
 
         $this->app->alias('compredict_users', 'Compredict\API\Users\Client');
+
+        Auth::provider('compredict', function ($app, array $config) {
+            return new CompredictUserProvider();
+        });
+
+        // register User class and User Provider
+        $this->app->bind('Compredict\User\Auth\Models\User', function ($app) {
+            return new User();
+        });
+
+        // add custom guard provider
+        Auth::provider('compredict', function ($app, array $config) {
+            return new UserProvider($app->make('Compredict\User\Auth\Models\User'));
+        });
     }
 
     /**
@@ -41,9 +57,28 @@ class CompredictAuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $source = dirname(__DIR__).'/config/compredict.php';
+        $this->publishConfig();
+        $this->publishRoutes();
+        $this->publishViews();
+    }
+
+    protected function publishConfig()
+    {
+        $source = dirname(__DIR__) . '/config/compredict.php';
         $this->publishes([$source => config_path('compredict.php')]);
         $this->mergeConfigFrom($source, 'compredict');
+    }
+
+    protected function publishRoutes()
+    {
+        $source = dirname(__DIR__) . '/Auth/Routes/web.php';
+        $this->loadRoutesFrom($source);
+    }
+
+    protected function publishViews()
+    {
+        $source = dirname(__DIR__) . '/Auth/Views/auth';
+        $this->loadViewsFrom($source, 'auth');
     }
 
     /**
