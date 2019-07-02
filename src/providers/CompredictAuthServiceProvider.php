@@ -32,9 +32,9 @@ class CompredictAuthServiceProvider extends ServiceProvider
      * @param  \Illuminate\Filesystem\Filesystem  $files
      * @return void
      */
-    public function __construct(Filesystem $files)
+    public function __construct($app, Filesystem $files)
     {
-        parent::__construct();
+        parent::__construct($app);
 
         $this->files = $files;
     }
