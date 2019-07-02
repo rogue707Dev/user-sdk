@@ -29,7 +29,7 @@
         "laravel/lumen-framework": "To test the Lumen bindings"
     },
     "autoload": {
-        "psr-4": { "Compredict\\User": "src/" }
+        "psr-4": { "Compredict\\User\\": "src/" }
     },
     "extra": {
         "laravel": {
