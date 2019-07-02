@@ -3,10 +3,10 @@
 namespace Compredict\User\Providers;
 
 use App\Authentication\CompredictUserProvider;
-use App\Auth\Models\User;
-use App\Auth\Providers\UserProvider;
 use Auth;
 use Compredict\API\Users\Client as Client;
+use Compredict\User\Auth\Models\User;
+use Compredict\User\Auth\Providers\UserProvider;
 use Illuminate\Support\ServiceProvider;
 
 class CompredictAuthServiceProvider extends ServiceProvider

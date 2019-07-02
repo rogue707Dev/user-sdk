@@ -2,6 +2,7 @@
 
 namespace Compredict\User\Auth\Providers;
 
+use Compredict\User\Auth\Models\User as CPUser;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider as IlluminateUserProvider;
 
@@ -18,7 +19,7 @@ class UserProvider implements IlluminateUserProvider
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      * @return void
      */
-    public function __construct(\App\Auth\Models\User $userModel)
+    public function __construct(CPUser $userModel)
     {
         $this->model = $userModel;
     }

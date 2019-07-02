@@ -37,7 +37,7 @@
                 "Compredict\\User\\Providers\\CompredictAuthServiceProvider"
             ],
             "aliases": {
-                "CP_USER": "Compredict\\User\\Facades\\CompredictFacade"
+                "CP_User": "Compredict\\User\\Facades\\CompredictFacade"
             }
         }
     }
