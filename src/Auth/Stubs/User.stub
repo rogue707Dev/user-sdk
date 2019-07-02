@@ -1,0 +1,10 @@
+<?php
+
+namespace App;
+
+use Compredict\User\Auth\Models\User as CPUser;
+
+class User extends CPUser
+{
+    //
+}
