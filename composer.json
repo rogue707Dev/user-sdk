@@ -30,15 +30,5 @@
     },
     "autoload": {
         "psr-4": { "Compredict\\User\\": "src/" }
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Compredict\\User\\Providers\\CompredictAuthServiceProvider"
-            ],
-            "aliases": {
-                "COMPREDICT": "Compredict\\User\\Facades\\CompredictFacade"
-            }
-        }
     }
 }

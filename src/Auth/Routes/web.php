@@ -11,7 +11,8 @@
 |
  */
 
-Route::group(['namespace' => 'Compredict\User\Auth\Controllers'], function () {
+Route::group(['namespace' => 'Compredict\User\Auth\Controllers',
+    'middleware' => ['web']], function () {
 
     Route::get('login', 'LoginController@showLoginForm')->name('login');
     Route::post('login', 'LoginController@login');
