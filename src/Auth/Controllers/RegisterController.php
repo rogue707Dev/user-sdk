@@ -2,8 +2,8 @@
 
 namespace Compredict\User\Auth\Controllers;
 
+use App\Http\Controllers\Controller;
 use Compredict\Auth\Models\User;
-use Compredict\Http\Controllers\Controller;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RedirectsUsers;
 use Illuminate\Http\Request;
