@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace Compredict\User\Auth\Controllers;
 
 use App\Http\Controllers\Controller;
 

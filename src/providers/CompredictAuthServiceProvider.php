@@ -8,7 +8,6 @@ use App\Auth\Providers\UserProvider;
 use Auth;
 use Compredict\API\Users\Client as Client;
 use Illuminate\Support\ServiceProvider;
-use \Illuminate\Filesystem\Filesystem;
 
 class CompredictAuthServiceProvider extends ServiceProvider
 {
@@ -18,26 +17,6 @@ class CompredictAuthServiceProvider extends ServiceProvider
      * @var bool
      */
     protected $defer = true;
-
-    /**
-     * The filesystem instance.
-     *
-     * @var \Illuminate\Filesystem\Filesystem
-     */
-    protected $files;
-
-    /**
-     * Create a new Service
-     *
-     * @param  \Illuminate\Filesystem\Filesystem  $files
-     * @return void
-     */
-    public function __construct($app, Filesystem $files)
-    {
-        parent::__construct($app);
-
-        $this->files = $files;
-    }
 
     /**
      * Register services.
@@ -86,29 +65,28 @@ class CompredictAuthServiceProvider extends ServiceProvider
 
     protected function publishConfig()
     {
-        $source = dirname(__DIR__) . '/config/compredict.php';
+        $source = dirname(__DIR__) . '/../config/compredict.php';
         $this->publishes([$source => config_path('compredict.php')]);
         $this->mergeConfigFrom($source, 'compredict');
     }
 
     protected function publishRoutes()
     {
-        $source = dirname(__DIR__) . '/src/Auth/Routes/web.php';
+        $source = dirname(__DIR__) . '/Auth/Routes/web.php';
         $this->loadRoutesFrom($source);
     }
 
     protected function publishViews()
     {
-        $source = dirname(__DIR__) . '/src/Auth/Views/auth';
+        $source = dirname(__DIR__) . '/Auth/Views/auth';
         $this->loadViewsFrom($source, 'auth');
+        $this->publishes([$source => resource_path('/views/auth')], 'views');
     }
 
     protected function publishUser()
     {
-        $filepath = dirname(__DIR__) . '/src/Auth/Stubs/User.stub';
-        $stub = $this->files->get($filepath);
-        $location = app_path()+"\User.php";
-        $this->files->put($location, $stub);
+        $source = dirname(__DIR__) . '/Auth/Stubs/User.stub';
+        $this->publishes([$source => app_path("User.php")], "model");
     }
 
     /**

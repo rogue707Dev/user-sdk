@@ -18,12 +18,12 @@ Route::group(['namespace' => 'Compredict\User\Auth\Controllers'], function () {
     Route::post('logout', 'LoginController@logout')->name('logout');
 
     // Registration Routes...
-    if (CP_User::canRegister()) {
+    if (\App::make("compredict_users")->canRegister()) {
         Route::get('register', 'RegisterController@showRegistrationForm')->name('register');
         Route::post('register', 'RegisterController@register');
     }
 
     Route::get('password/reset', 'ForgotPasswordController@showLink')->name('password.request');
-    Route::post('password/email', 'ForgotPasswordController@sendResetLinkEmail')->('password.email');
+    Route::post('password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
 
 });
