@@ -25,6 +25,13 @@ class CompredictAuthServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        // Merge auth configuration
+        $this->publishAuthConfig();
+
+        //Merge Compredict configuration
+        $source = dirname(__DIR__) . '/../config/compredict.php';
+        $this->mergeConfigFrom($source, 'compredict');
+
         $this->app->singleton('compredict_users', function ($app) {
             $config = $app->make('config')->get('compredict');
             $usersConfig = $config['users'];
@@ -70,6 +77,19 @@ class CompredictAuthServiceProvider extends ServiceProvider
         $this->mergeConfigFrom($source, 'compredict');
     }
 
+    protected function publishAuthConfig()
+    {
+        $source = dirname(__DIR__) . '/../config/auth/guards.php';
+        $this->mergeConfigFrom($source, 'auth.guards');
+
+        $source = dirname(__DIR__) . '/../config/auth/providers.php';
+        $this->mergeConfigFrom($source, 'auth.providers');
+
+        $source = dirname(__DIR__) . '/../config/auth/defaults.php';
+        $this->mergeConfigFrom($source, 'auth');
+        $this->app['config']->set('auth.defaults.guard', 'compredict');
+    }
+
     protected function publishRoutes()
     {
         $source = dirname(__DIR__) . '/Auth/Routes/web.php';
@@ -79,7 +99,7 @@ class CompredictAuthServiceProvider extends ServiceProvider
     protected function publishViews()
     {
         $source = dirname(__DIR__) . '/Auth/Views/auth';
-        $this->loadViewsFrom($source, 'auth');
+        $this->loadViewsFrom($source, 'compredict');
         $this->publishes([$source => resource_path('/views/auth')], 'views');
     }
 
