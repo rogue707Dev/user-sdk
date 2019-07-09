@@ -53,7 +53,7 @@ class CompredictAuthServiceProvider extends ServiceProvider
 
         // add custom guard provider
         Auth::provider('compredict', function ($app, array $config) {
-            return new UserProvider($app->make('Compredict\User\Auth\Models\User'));
+            return new UserProvider();
         });
     }
 

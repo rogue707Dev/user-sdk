@@ -3,47 +3,19 @@
 namespace Compredict\User\Auth\Models;
 
 use Illuminate\Contracts\Auth\Authenticatable as Authenticatable;
-use \App;
+use Illuminate\Database\Eloquent\Model;
 
-class User implements Authenticatable
+class User extends Model implements Authenticatable
 {
+    use APITrait;
 
     protected $rememberTokenName = false;
+    public $timestamps = false;
 
     protected $user;
     protected $token;
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-
-    public function fetchUserByCredentials(array $credentials)
-    {
-        $user = App::make('CP_User')::login($credentials["username"], $credentials["password"]);
-
-        if ($user !== false) {
-            $this->user = $user;
-            $this->token = $user->APIKey;
-        }
-
-        return $this;
-    }
-
-    public function fetchUserByToken($identifier)
-    {
-        $user = App::make('CP_User')::getUser($identifier);
-
-        if ($user !== false) {
-            $this->user = $user;
-            $this->token = $user->APIKey;
-        }
-
-        return $this;
-    }
-
-    public function update()
+    public function update(array $attributes = [], array $options = [])
     {
         if (!isset($this->user)) {
             throw new Exception("User is not logged in!");
@@ -52,25 +24,55 @@ class User implements Authenticatable
         $this->user->update();
     }
 
-    public static function create($data)
+    /**
+     * Save the model to the database.
+     *
+     * @param  array  $options
+     * @return bool
+     */
+    public function save(array $options = [])
     {
-        $user = App::make('CP_User')::registerUser($data['username'],
-            $data['email'],
-            $data['password1'],
-            $data['password2'],
-            $data['organization'],
-            $data['first_name'],
-            $data['last_name'],
-            $data['phone_number']);
-
-        if ($user === false) {
+        // If the "saving" event returns false we'll bail out of the save and return
+        // false, indicating that the save failed. This provides a chance for any
+        // listeners to cancel save operations if validations fail or whatever.
+        if ($this->fireModelEvent('saving') === false) {
             return false;
         }
 
-        $obj = new static();
-        $obj->user = $user;
-        $obj->token = $user->APIKey;
-        return $obj;
+        // If the model already exists in the database we can just update our record
+        // that is already in this database using the current IDs in this "where"
+        // clause to only update this model. Otherwise, we'll just insert them.
+        if (isset($this->user)) {
+            $saved = $this->user->update();
+        }
+
+        // If the model is successfully saved, we need to do a few more things once
+        // that is done. We will call the "saved" method here to run any actions
+        // we need to happen after a model gets successfully saved right here.
+        if ($saved !== false) {
+            $this->finishSave($options);
+        }
+
+        return ($saved === false) ? false : true;
+    }
+
+    public function fresh()
+    {
+        if (!isset($this->user)) {
+            throw new \Exception("User not logged in!");
+        }
+
+        $response = $this->user->fresh();
+        return self::processResponse($response);
+    }
+
+    public function refresh()
+    {
+        $user = $this->fresh();
+        $this->user = $user;
+        $this->token = $user->APIKey;
+
+        return $this;
     }
 
     /**

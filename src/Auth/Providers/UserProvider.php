@@ -8,20 +8,15 @@ use Illuminate\Contracts\Auth\UserProvider as IlluminateUserProvider;
 
 class UserProvider implements IlluminateUserProvider
 {
-    /**
-     * The Mongo User Model
-     */
-    private $model;
 
     /**
-     * Create a new mongo user provider.
      *
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      * @return void
      */
-    public function __construct(CPUser $userModel)
+    public function __construct()
     {
-        $this->model = $userModel;
+        //
     }
 
     /**
@@ -36,7 +31,7 @@ class UserProvider implements IlluminateUserProvider
             return;
         }
 
-        $user = $this->model->fetchUserByCredentials($credentials);
+        $user = CPUser::fetchUserByCredentials($credentials);
 
         return (is_null($user->username)) ? null : $user;
     }
@@ -50,13 +45,13 @@ class UserProvider implements IlluminateUserProvider
      */
     public function validateCredentials(Authenticatable $user, array $credentials)
     {
-        $user = $user->fetchUserByToken($user->APIKey);
+        $user = CPUser::fetchUserByToken($user->APIKey);
         return $user->username == $credentials["username"];
     }
 
     public function retrieveById($identifier)
     {
-        $user = $this->model->fetchUserByToken($identifier);
+        $user = CPUser::fetchUserByToken($identifier);
         return (is_null($user->username)) ? null : $user;
     }
 
