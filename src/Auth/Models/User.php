@@ -56,7 +56,7 @@ class User extends Model implements Authenticatable
         return ($saved === false) ? false : true;
     }
 
-    public function fresh()
+    public function fresh($with = [])
     {
         if (!isset($this->user)) {
             throw new \Exception("User not logged in!");
