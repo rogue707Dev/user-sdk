@@ -151,6 +151,11 @@ class User extends Model implements Authenticatable
 
     public function __set($field, $value)
     {
-        $this->user->$field = $value;
+        if ($field == 'user') {
+            $this->user = $value;
+        } else {
+            $this->user->$field = $value;
+        }
+
     }
 }
