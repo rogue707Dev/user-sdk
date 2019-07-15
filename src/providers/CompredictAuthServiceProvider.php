@@ -47,7 +47,7 @@ class CompredictAuthServiceProvider extends ServiceProvider
         });
 
         // register User class and User Provider
-        $this->app->bind('Compredict\User\Auth\Models\User', function ($app) {
+        $this->app->bind('App\User', function ($app) {
             return new User();
         });
 

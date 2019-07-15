@@ -2,7 +2,7 @@
 
 namespace Compredict\User\Auth\Providers;
 
-use Compredict\User\Auth\Models\User as CPUser;
+use App\User as CPUser;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider as IlluminateUserProvider;
 
