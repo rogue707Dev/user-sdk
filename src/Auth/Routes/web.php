@@ -24,7 +24,7 @@ Route::group(['namespace' => 'Compredict\User\Auth\Controllers',
         Route::post('register', 'RegisterController@register');
     }
 
-    Route::get('password/reset', 'ForgotPasswordController@showLink')->name('password.request');
+    Route::get('password/reset', 'ForgotPasswordController@showLinkRequestForm')->name('password.request');
     Route::post('password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
 
 });
