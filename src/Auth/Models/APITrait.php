@@ -36,9 +36,10 @@ trait APITrait
             $data['organization'],
             $data['first_name'],
             $data['last_name'],
-            $data['phone_number']);
+            $data['phone_number'],
+            true);
 
-        return self::processResponse($response);
+        return is_object($response) ? self::processResponse($response) : $response;
     }
 
     private static function processResponse($response)

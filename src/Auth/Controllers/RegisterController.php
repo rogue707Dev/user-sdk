@@ -3,7 +3,7 @@
 namespace Compredict\User\Auth\Controllers;
 
 use App\Http\Controllers\Controller;
-use Compredict\Auth\Models\User;
+use App\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RedirectsUsers;
 use Illuminate\Http\Request;
@@ -70,7 +70,8 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         try {
-            return User::create([
+
+            $response = User::create([
                 'username' => $data['username'],
                 'email' => $data['email'],
                 'password1' => $data['password1'],
@@ -80,13 +81,15 @@ class RegisterController extends Controller
                 'organization' => $data['organization'],
                 'phone_number' => $data['phone_number'],
             ]);
+
+            return is_object($response) ?
+                $response : (is_string($response) ?
+                    \Redirect::to('/')->with('message', $response)->withInput() : \Redirect::back()->with('message', __('Somthing went worng please try again later.'))->withInput());
+
         } catch (\Exception $exception) {
-            $errors = explode("|||", $exception->getMessage());
             $messages = [];
-            foreach ($errors as $error) {
-                $error_split = explode(" : ", $error);
-                $messages[$error_split[0]] = $error_split[1];
-            }
+            $error_split = explode(" : ", $exception->getMessage());
+            $messages[$error_split[0]] = $error_split[1];
             return \Redirect::back()->withErrors($messages)->withInput();
         }
     }
