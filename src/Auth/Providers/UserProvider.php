@@ -33,7 +33,7 @@ class UserProvider implements IlluminateUserProvider
 
         $user = CPUser::fetchUserByCredentials($credentials);
 
-        return (is_null($user->username)) ? null : $user;
+        return ( empty($user) ? null : (is_null($user->username) ? null : $user));
     }
 
     /**
