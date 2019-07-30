@@ -4,6 +4,8 @@ namespace Compredict\User\Auth\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
@@ -45,6 +47,14 @@ class LoginController extends Controller
     public function username()
     {
         return 'username';
+    }
+
+
+    protected function sendFailedLoginResponse(Request $request)
+    {
+        throw ValidationException::withMessages([
+            $this->username() => [\CP_User::getLastError()->error],
+        ]);
     }
 
 }
