@@ -137,7 +137,7 @@ class User extends Model implements Authenticatable
     {
         // then, if a method exists for the specified field and the field we should actually be examining
         // has a value, call the method instead
-        if (method_exists($this, $field) && isset($this->user->$field)) {
+        if (method_exists($this, $field)) {
             return $this->$field();
         }
 
