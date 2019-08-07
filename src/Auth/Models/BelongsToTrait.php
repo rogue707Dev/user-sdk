@@ -2,11 +2,26 @@
 
 namespace Compredict\User\Auth\Models;
 
-use Illuminate\Support\Str;
 use \App;
+use App\User;
+use Illuminate\Support\Str;
 
 trait BelongsToTrait
 {
+    public function getUserAttribute()
+    {
+        return $this->user();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\belongsTo
+     */
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     /**
      * Define an inverse one-to-one or many relationship.
      *
