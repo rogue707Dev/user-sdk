@@ -2,11 +2,27 @@
 
 namespace Compredict\User\Auth\Models;
 
-use Illuminate\Support\Facades\DB;
 use \App;
+use App\User;
+use Illuminate\Support\Facades\DB;
 
 trait BelongsToManyTrait
 {
+
+    public function getUserAttribute()
+    {
+        return $this->user();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\belongsToMany
+     */
+
+    public function user()
+    {
+        return $this->belongsToMany(User::class);
+    }
+
     public function belongsToMany($related, $table = null, $foreignPivotKey = null, $relatedPivotKey = null,
         $parentKey = null, $relatedKey = null, $relation = null) {
         // If no relationship name was passed, we will pull backtraces to get the
