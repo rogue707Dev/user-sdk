@@ -42,7 +42,7 @@ trait APITrait
         return is_object($response) ? self::processResponse($response) : $response;
     }
 
-    private static function processResponse($response)
+    public static function processResponse($response)
     {
         if ($response === false) {
             return false;

@@ -3,6 +3,8 @@
 namespace Compredict\User\Auth\Providers;
 
 use App\User as CPUser;
+use Compredict\API\Users\Resources\User as User;
+use Compredict\User\Auth\Models\User as UserModel;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider as IlluminateUserProvider;
 use Illuminate\Support\Facades\Session;
@@ -62,6 +64,12 @@ class UserProvider implements IlluminateUserProvider
 
     public function retrieveById($identifier)
     {
+        $sessionUser = Session::get('user');
+
+        if (!empty($sessionUser)) {
+            return UserModel::processResponse(new User($sessionUser['api_key'], (object) $sessionUser));
+        }
+
         $user = CPUser::fetchUserByToken($identifier);
         return (!empty($user) ? (is_null($user->id)) ? null : $user : null);
     }
