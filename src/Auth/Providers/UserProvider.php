@@ -40,6 +40,7 @@ class UserProvider implements IlluminateUserProvider
 
         Session::put('user', [
             'id' => $user->id,
+            'api_key' => $user->APIKey,
             'username' => $user->username,
             'is_staff' => $user->is_staff,
         ]);
