@@ -44,6 +44,11 @@ class UserProvider implements IlluminateUserProvider
             'id' => $user->id,
             'api_key' => $user->APIKey,
             'username' => $user->username,
+            'email' => $user->email,
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'organization' => $user->organization,
+            'phone_number' => $user->phone_number,
             'is_staff' => $user->is_staff,
         ]);
 
