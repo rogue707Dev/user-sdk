@@ -3,8 +3,11 @@
 namespace Compredict\User\Auth\Providers;
 
 use App\User as CPUser;
+use Compredict\API\Users\Resources\User as User;
+use Compredict\User\Auth\Models\User as UserModel;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider as IlluminateUserProvider;
+use Illuminate\Support\Facades\Session;
 
 class UserProvider implements IlluminateUserProvider
 {
@@ -27,13 +30,29 @@ class UserProvider implements IlluminateUserProvider
      */
     public function retrieveByCredentials(array $credentials)
     {
-        if (empty($credentials)) {
+        $user = CPUser::fetchUserByCredentials($credentials);
+
+        if (empty($user)) {
             return;
         }
 
-        $user = CPUser::fetchUserByCredentials($credentials);
+        if (is_null($user->id)) {
+            return;
+        }
 
-        return ( empty($user) ? null : (is_null($user->username) ? null : $user));
+        Session::put('user', [
+            'id' => $user->id,
+            'api_key' => $user->APIKey,
+            'username' => $user->username,
+            'email' => $user->email,
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'organization' => $user->organization,
+            'phone_number' => $user->phone_number,
+            'is_staff' => $user->is_staff,
+        ]);
+
+        return $user;
     }
 
     /**
@@ -45,14 +64,19 @@ class UserProvider implements IlluminateUserProvider
      */
     public function validateCredentials(Authenticatable $user, array $credentials)
     {
-        $user = CPUser::fetchUserByToken($user->APIKey);
         return $user->username == $credentials["username"];
     }
 
     public function retrieveById($identifier)
     {
+        $sessionUser = Session::get('user');
+
+        if (!empty($sessionUser)) {
+            return UserModel::processResponse(new User($sessionUser['api_key'], (object) $sessionUser));
+        }
+
         $user = CPUser::fetchUserByToken($identifier);
-        return (is_null($user->username)) ? null : $user;
+        return (!empty($user) ? (is_null($user->id)) ? null : $user : null);
     }
 
     public function retrieveByToken($identifier, $token)
