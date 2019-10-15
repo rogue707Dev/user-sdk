@@ -52,8 +52,21 @@ class LoginController extends Controller
 
     protected function sendFailedLoginResponse(Request $request)
     {
+        $response = \CP_User::getLastError();
+
+        if (isset($response->errors)) {
+            $message = explode(':', $response->errors[0]);
+            $message = $message[sizeof($message) - 1];
+        } elseif (isset($response->error)) {
+            $message = $response->error;
+        } elseif (is_string($response)) {
+            $message = $response;
+        } else {
+            $message = 'Something went wrong please try again!';
+        }
+
         throw ValidationException::withMessages([
-            $this->username() => [\CP_User::getLastError()->error],
+            $this->username() => [$message],
         ]);
     }
 
