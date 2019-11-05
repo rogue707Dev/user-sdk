@@ -48,7 +48,7 @@ trait APITrait
             return false;
         }
 
-        $obj = new static();
+        $obj = new \App\User();
         $obj->user = $response;
         $obj->token = $response->APIKey;
         return $obj;
