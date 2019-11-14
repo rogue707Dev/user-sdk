@@ -37,7 +37,7 @@ class CompredictAuthServiceProvider extends ServiceProvider
             $usersConfig = $config['users'];
             $cp_user_client = Client::getInstance($usersConfig['admin_key']);
             $cp_user_client->failOnError($usersConfig['fail_on_error']);
-            $cp_user_client->setURL(env('COMPREDICT_SERVER_URL', $this->client->getURL()));
+            $cp_user_client->setURL(env('COMPREDICT_SERVER_URL', $cp_user_client->getURL()));
             return $cp_user_client;
         });
 
